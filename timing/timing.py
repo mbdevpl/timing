@@ -211,6 +211,7 @@ class TimingGroup(dict):
             # np.ndarray((len(timings),), dtype=float)
             array = np.array(elapsed, dtype=float)
             self._summary[name] = {
+                'data': array.tolist(),
                 'samples': len(array),
                 'min': array.min(),
                 'max': array.max(),
