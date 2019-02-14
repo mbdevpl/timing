@@ -1,0 +1,68 @@
+sudo: false
+language: generic
+matrix:
+  include:
+    - os: linux
+      language: python
+      python: "3.4"
+    - os: linux
+      language: python
+      python: "3.5"
+    - os: linux
+      language: python
+      python: "3.6"
+    - os: linux
+      dist: xenial
+      sudo: true
+      language: python
+      python: "3.7"
+    - os: linux
+      language: python
+      python: "3.8-dev"
+    - os: linux
+      language: python
+      python: "pypy3.5-5.8.0"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.4.9"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.5.6"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.6.8"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.7.2"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.8-dev"
+  allow_failures:
+    - python: "3.8-dev"
+    - env: TRAVIS_PYTHON_VERSION="3.8-dev"
+
+before_install: |
+  set -e
+  if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    brew update
+    brew install pyenv || brew upgrade pyenv
+    pyenv install "${TRAVIS_PYTHON_VERSION}"
+    export PATH="$HOME/.pyenv/versions/${TRAVIS_PYTHON_VERSION}/bin:${PATH}"
+  fi
+  set +e
+
+install:
+  - pip install -U pip
+  - pip install -U -r dev_requirements.txt
+
+script:
+  - TEST_PACKAGING=1 python -m coverage run --branch --source . -m unittest -v
+
+after_success:
+  - python -m coverage report --show-missing
+  - codecov
+
+notifications:
+  slack:
+    secure: "Iase8yATRJe6L6ab62G/ESWAt4if7ri0I5Bnkx9snxvkZ01wtrdHBcB+8Ompx26FjG65ikDtPvF3oEbVYVWUOxfRT5lB4XLeno1gIIoyOyWGggr2mQ9b1CUpaGmkd3kc2pm2enCp5Gs03A6oDXI26fPQ4lfBhZv6E488i4rGljrxzm0UrirY5izxa6kZwi5+aVxrgrduNZNv4xwSJTbMxObjL++J3LS/DPPa7MbIliTIitMzXDl1lLRDfWDKt0HKTrpMSZGy5Ff2pk+3p/a4VEaW+Ee4K6ELML39QZ2lignkIKmzgou8fiMh9bU+kGb/V61PrVSXPRunoqFY51CvGqcrMeC4iVEiz9ElXEF76FaCvdqGNNU3TeWb67Xix4l6e9w3JCi1zvpaB/Ii6aWT7FDE3FEV+n1geTSYk7csu9U1cpTwRvVs8z74CCF6ttj7TqYtBN0rzHyqbRT4RV3Rp89b+vE65sgf52TKh0WGgkmdg/+XHfP/K7I45QloQcq30KgylXzKg64BKBtLhha2tdlgZ2Ztbgs1WaNXSmLBib4whwmmli4K5reejAHF3twStncVSRZkRyqvQLgsBZADfTfPHMp4EaGs8QwflV4/fTWwHMCQSkullSnA7U9TgjL90RvC92IPA79jZ2lpu+77Qf4zIcBH/Q4beegvlPYb9aE="
+  email: false
