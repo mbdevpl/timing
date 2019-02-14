@@ -12,7 +12,6 @@ class Package(setup_boilerplate.Package):
     download_url = 'https://github.com/mbdevpl/timing'
     classifiers = [
         'Development Status :: 1 - Planning',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3 :: Only']
