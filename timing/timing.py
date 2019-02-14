@@ -89,6 +89,12 @@ class TimingCache:
     chronological = []
     """Individual Timing objects in the order that they were started in."""
 
+    @classmethod
+    def clear(cls):
+        cls.hierarchical = collections.OrderedDict()
+        cls.flat = collections.OrderedDict()
+        cls.chronological = []
+
 
 class Timing:
 
@@ -168,6 +174,10 @@ class TimingGroup(dict):
         return self._name
 
     @property
+    def timings(self):
+        return [_ for _ in self._timings]
+
+    @property
     def summary(self):
         if self._summary is None:
             self.summarize()
@@ -200,15 +210,24 @@ class TimingGroup(dict):
         yield timer
         timer.stop()
 
-    def measure_many(self, name: str, samples: int = None, treshold: float = 1.0):
-        if samples is None:
-            while True:
-                raise NotImplementedError()
-        for _ in range(0, samples):
+    def measure_many(self, name: str, samples: t.Optional[int] = None,
+                     threshold: t.Optional[float] = None):
+        """Use via 'for timer in measure_many('name'[, samples][, threshold])."""
+        assert samples is not None or threshold is not None, (samples, threshold)
+        assert samples is None or isinstance(samples, int) and samples > 0, samples
+        assert threshold is None or threshold > 0, threshold
+        while True:
             timer = self.start(name)
             yield timer
             timer.stop()
-        return
+            if samples is not None:
+                samples -= 1
+                if samples == 0:
+                    break
+            if threshold is not None:
+                threshold -= timer.elapsed
+                if threshold <= 0:
+                    break
 
     def summarize(self) -> None:
         """Calculate various statistics from the raw data."""
@@ -230,7 +249,7 @@ class TimingGroup(dict):
     def __eq__(self, other):
         if not isinstance(other, TimingGroup):
             return False
-        return self._name == other.name and self._timings == other._timings
+        return self._name == other.name and self._timings == other.timings
 
     def __str__(self):
         args = [self._name] + self._timings
@@ -278,19 +297,25 @@ def query_cache(name: str) -> t.Union[dict, TimingGroup, Timing]:
     return timing_cache['.']
 
 
-def normalize_overhead(samples: int = 1000):
+def normalize_overhead(samples: int = 10000, threshold: float = 1.0):
     """Investigate overhead of starting and stopping the timer.
 
     Do it so as to take the overhead into account when calculating actual execution times."""
     assert isinstance(samples, int)
+    assert isinstance(threshold, float)
 
     timing_overhead = Timing('timing overhead test')
-
     overheads = []
-    for _ in range(samples):
+
+    cache_status = TimingConfig.enable_cache
+    TimingConfig.enable_cache = False
+    __ = TimingGroup('timing_overhead_normalization')
+    for _ in __.measure_many('overhead', samples=samples, threshold=threshold):
         timing_overhead.start()
         timing_overhead.stop()
         overheads.append(timing_overhead.elapsed)
+
+    TimingConfig.enable_cache = cache_status
 
     mean = statistics.mean(overheads)
     median = statistics.median(overheads)
@@ -299,13 +324,22 @@ def normalize_overhead(samples: int = 1000):
 
     TimingConfig.overhead = median
 
-    # assert stdev <= 0.000001
-    # assert variance <= 0.000001
-
     if __debug__:
-        _LOG.warning(
+        _LOG.log(
+            logging.DEBUG if all(_ <= 0.00001 for _ in (mean, median, stdev, variance))
+            else logging.WARNING,
             'normalized overhead using %i samples: mean=%f, median=%f, stdev=%f, variance=%f',
             samples, mean, median, stdev, variance)
+
+        if stdev > 0.0001 or variance > 0.0001:
+            _LOG.error(
+                'stdev=%f and/or variance=%f are large -- timing results will not be stable',
+                stdev, variance)
+
+        if mean > 0.0001 or median > 0.0001:
+            _LOG.error(
+                'mean=%f and/or median=%f are large -- timing will incur overhead',
+                mean, median)
 
 
 normalize_overhead()
