@@ -5,6 +5,8 @@ First version written on 7 September 2016.
 Copyright 2016, 2018  Mateusz Bysiek https://mbdevpl.github.io/
 """
 
+# pylint: disable=too-few-public-methods
+
 import collections
 import contextlib
 import datetime
@@ -21,11 +23,15 @@ if __debug__:
 
 class TimingConfig:
 
+    """Global configuration of timing."""
+
     enable_cache = True
     overhead = 0.0
 
 
 class TimingCache:
+
+    """Global cache for timing results."""
 
     hierarchical = collections.OrderedDict()
     """Hierarchy of TimingGroup objects strucutred in a tree that branches
@@ -205,6 +211,7 @@ class TimingGroup(dict):
         return
 
     def summarize(self) -> None:
+        """Calculate various statistics from the raw data."""
         self._summary = {}
         for name, timings in self.items():
             elapsed = [_.elapsed for _ in timings]
@@ -262,6 +269,7 @@ def get_timing_group(name: t.Optional[str]) -> TimingGroup:
 
 
 def query_cache(name: str) -> t.Union[dict, TimingGroup, Timing]:
+    """Request timing data from global cache."""
     assert isinstance(name, str), type(name)
     name_fragments = name.split('.')
     timing_cache = TimingCache.hierarchical
