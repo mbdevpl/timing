@@ -1,5 +1,7 @@
 
 import logging
+import os
+import platform
 from time import perf_counter as original_perf_counter
 import time
 import unittest
@@ -59,8 +61,9 @@ class Tests(unittest.TestCase):
             with unittest.mock.patch.object(time, 'perf_counter', new=slow_perf_counter):
                 normalize_overhead()
             self.assertGreaterEqual(TimingConfig.overhead, 0.1)
-        self.assertFalse(any(all(_ in line for _ in ('ERROR', 'variance', 'stdev', 'large'))
-                             for line in log.output), msg=log.output)
+        if platform.system() == 'Linux' or not os.environ.get('CI'):
+            self.assertFalse(any(all(_ in line for _ in ('ERROR', 'variance', 'stdev', 'large'))
+                                 for line in log.output), msg=log.output)
         self.assertTrue(any(all(_ in line for _ in ('ERROR', 'mean', 'median', 'large'))
                             for line in log.output), msg=log.output)
 
