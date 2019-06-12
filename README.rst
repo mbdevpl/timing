@@ -97,6 +97,58 @@ and how many seconds at most you want to spend on measurements via :python:`thre
         more_tomatoes()
 
 
+Also, you can use :python:`measure` and :python:`measure(name)` as decorator.
+In this scenario you cannot access the timings directly, but the results will be stored
+in the timing group object, as well as in the global cache unless you configure the timing
+to not use the cache.
+
+.. code:: python
+
+    import timing
+
+    _TIME = timing.get_timing_group(__name__)
+
+    @_TIME.measure
+    def recipe():
+        ham()
+        eggs()
+        bacon()
+
+    @_TIME.measure('the_best_recipe')
+    def bad_recipe():
+        spam()
+        spam()
+        spam()
+
+
+Then, after calling each function the results can be accessed through :python:`summary` property.
+
+.. code:: python
+
+    recipe()
+    bad_recipe()
+    bad_recipe()
+
+    assert _TIME.summary['recipe']['samples'] == 1
+    assert _TIME.summary['the_best_recipe']['samples'] == 2
+
+
+The :python:`summary` property is dynamically computed on first access. Subsequent accesses
+will not recompute the values, so if you need to access the updated results,
+call the :python:`summarize()` method.
+
+.. code:: python
+
+    recipe()
+    assert _TIME.summary['recipe']['samples'] == 1
+
+    bad_recipe()
+    bad_recipe()
+    assert _TIME.summary['the_best_recipe']['samples'] == 2  # will fail
+    _TIME.summarize()
+    assert _TIME.summary['the_best_recipe']['samples'] == 2  # ok
+
+
 Further API and documentation are in development.
 
 
