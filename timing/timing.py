@@ -13,6 +13,7 @@ import datetime
 import logging
 import statistics
 import time
+import types
 import typing as t
 
 import numpy as np
@@ -204,11 +205,37 @@ class TimingGroup(dict):
         timing.start()
         return timing
 
+    def measure(self, function: types.FunctionType = None, name: str = None):
+        print(type(function), function)
+        print(type(name), name)
+        if name is None and function is not None and isinstance(function, str):
+            name = function
+            function = None
+        if function is None:
+            return self._measure_context(name)
+        assert isinstance(function, types.FunctionType)
+        return self._measure_decorator(function, name)
+
+    def _measure_decorator_constr(self, func):
+        print('aaa')
+
+    measure.__call__ = _measure_decorator_constr
+
     @contextlib.contextmanager
-    def measure(self, name: str):
+    def _measure_context(self, name: str):
         timer = self.start(name)
         yield timer
         timer.stop()
+
+    def _measure_decorator(self, function: types.FunctionType,
+                           name: str = None) -> types.FunctionType:
+        if name is None:
+            name = function.__name__
+
+        def function_wrapper(*args, **kwargs):
+            with self.measure(name):
+                return function(*args, **kwargs)
+        return function_wrapper
 
     def measure_many(self, name: str, samples: t.Optional[int] = None,
                      threshold: t.Optional[float] = None):
