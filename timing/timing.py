@@ -206,8 +206,6 @@ class TimingGroup(dict):
         return timing
 
     def measure(self, function: types.FunctionType = None, name: str = None):
-        print(type(function), function)
-        print(type(name), name)
         if name is None and function is not None and isinstance(function, str):
             name = function
             function = None
@@ -215,11 +213,6 @@ class TimingGroup(dict):
             return self._measure_context(name)
         assert isinstance(function, types.FunctionType)
         return self._measure_decorator(function, name)
-
-    def _measure_decorator_constr(self, func):
-        print('aaa')
-
-    measure.__call__ = _measure_decorator_constr
 
     @contextlib.contextmanager
     def _measure_context(self, name: str):

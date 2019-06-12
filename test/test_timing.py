@@ -28,61 +28,6 @@ def erratic_perf_counter():
 
 class Tests(unittest.TestCase):
 
-    @unittest.expectedFailure
-    def test_timing(self):
-        Timing('timing.name')
-        # TimingCache.clear()
-        self.fail()
-
-    def test_measure_context(self):
-        timing = TimingGroup('timings.contexts')
-
-        with timing.measure('context1'):
-            time.sleep(0.01)
-
-        self.assertIn('context1', timing.summary)
-        self.assertEqual(timing.summary['context1']['samples'], 1)
-
-    def test_measure_decorator(self):
-        timing = TimingGroup('timings.decorators')
-
-        @timing.measure
-        def add(a, b):
-            time.sleep(0.02)
-            return a + b
-
-        @timing.measure('mult')
-        def multiply(a, b):
-            time.sleep(0.02)
-            return a * b
-
-        self.assertEqual(add(21, 21), 42)
-        self.assertEqual(add(-5, 5), 0)
-        self.assertEqual(multiply(21, 2), 42)
-        self.assertEqual(multiply(-5, 5), -25)
-        self.assertIn('add', timing.summary)
-        self.assertEqual(timing.summary['add']['samples'], 2)
-        self.assertNotIn('multiply', timing.summary)
-        self.assertIn('mult', timing.summary)
-        self.assertEqual(timing.summary['mult']['samples'], 2)
-
-    @unittest.expectedFailure
-    def test_timing_group(self):
-        TimingGroup('timing.group.name')
-        # TimingCache.clear()
-        self.fail()
-
-    @unittest.expectedFailure
-    def test_get_timing_group(self):
-        get_timing_group('timing.group.name')
-        TimingCache.clear()
-        self.fail()
-
-    @unittest.expectedFailure
-    def test_query_cache(self):
-        query_cache('timing.group.name')
-        self.fail()
-
     def test_overhead(self):
         self.assertTrue(TimingConfig.enable_cache)
 
@@ -114,3 +59,61 @@ class Tests(unittest.TestCase):
         self.assertTrue(not TimingCache.hierarchical, msg=TimingCache.hierarchical)
         self.assertTrue(not TimingCache.flat, msg=TimingCache.flat)
         self.assertTrue(not TimingCache.chronological, msg=TimingCache.chronological)
+
+    @unittest.expectedFailure
+    def test_get_timing_group(self):
+        get_timing_group('timing.group.name')
+        TimingCache.clear()
+        self.fail()
+
+    @unittest.expectedFailure
+    def test_query_cache(self):
+        query_cache('timing.group.name')
+        self.fail()
+
+    @unittest.expectedFailure
+    def test_timing(self):
+        Timing('timing.name')
+        # TimingCache.clear()
+        self.fail()
+
+
+class TimingGroupTests(unittest.TestCase):
+
+    @unittest.expectedFailure
+    def test_timing_group(self):
+        TimingGroup('timing.group.name')
+        # TimingCache.clear()
+        self.fail()
+
+    def test_measure_context(self):
+        _time = TimingGroup('timings.contexts')
+
+        with _time.measure('context1'):
+            time.sleep(0.01)
+
+        self.assertIn('context1', _time.summary)
+        self.assertEqual(_time.summary['context1']['samples'], 1)
+
+    def test_measure_decorator(self):
+        _time = TimingGroup('timings.decorators')
+
+        @_time.measure
+        def add(a, b):
+            time.sleep(0.02)
+            return a + b
+
+        @_time.measure('mult')
+        def multiply(a, b):
+            time.sleep(0.02)
+            return a * b
+
+        self.assertEqual(add(21, 21), 42)
+        self.assertEqual(add(-5, 5), 0)
+        self.assertEqual(multiply(21, 2), 42)
+        self.assertEqual(multiply(-5, 5), -25)
+        self.assertIn('add', _time.summary)
+        self.assertEqual(_time.summary['add']['samples'], 2)
+        self.assertNotIn('multiply', _time.summary)
+        self.assertIn('mult', _time.summary)
+        self.assertEqual(_time.summary['mult']['samples'], 2)
