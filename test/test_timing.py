@@ -47,7 +47,7 @@ class Tests(unittest.TestCase):
         with self.assertLogs(level=logging.ERROR) as log:
             with unittest.mock.patch.object(time, 'perf_counter', new=erratic_perf_counter):
                 normalize_overhead()
-            self.assertLessEqual(TimingConfig.overhead, 0.11)
+            self.assertLessEqual(TimingConfig.overhead, 0.125)
         self.assertTrue(any(all(_ in line for _ in ('ERROR', 'variance', 'stdev', 'large'))
                             for line in log.output), msg=log.output)
         self.assertTrue(any(all(_ in line for _ in ('ERROR', 'mean', 'median', 'large'))
