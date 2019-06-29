@@ -58,11 +58,28 @@ class TimingGroup(dict):
         timing.start()
         return timing
 
-    def measure(self, function: types.FunctionType = None, name: str = None):
+    def measure(self, function: t.Optional[types.FunctionType] = None, name: str = None):
+        """Use this method as a context manager or decorator.
+
+        As context manager:
+
+        with ....measure(name) as timer:
+            ...
+
+        As decorator:
+
+        @measure
+        def ...
+
+        @measure(name)
+        def ...
+        """
+        assert function is not None or name is not None
         if name is None and function is not None and isinstance(function, str):
-            name = function
-            function = None
+            function, name = None, function
         if function is None:
+            # in practice this path is also taken when @measure(name) is used,
+            # but since contextlib uses ContextDecorator, it works
             return self._measure_context(name)
         assert isinstance(function, types.FunctionType)
         return self._measure_decorator(function, name)
@@ -74,7 +91,7 @@ class TimingGroup(dict):
         timer.stop()
 
     def _measure_decorator(self, function: types.FunctionType,
-                           name: str = None) -> types.FunctionType:
+                           name: t.Optional[str] = None) -> types.FunctionType:
         if name is None:
             name = function.__name__
 

@@ -11,7 +11,8 @@ class Timing:
     """
 
     def __init__(self, name: str):
-        assert isinstance(name, str)
+        assert isinstance(name, str), type(name)
+        assert name
 
         # self._group = None  # type: t.Optional[TimingGroup]
         self._name = name  # type: str

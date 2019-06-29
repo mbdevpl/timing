@@ -1,6 +1,8 @@
 
+import contextlib
 import logging
 import time
+import types
 import unittest
 
 from timing.group import TimingGroup
@@ -47,10 +49,16 @@ class Tests(unittest.TestCase):
             time.sleep(0.02)
             return a + b
 
+        self.assertNotIsInstance(add, contextlib.AbstractContextManager)
+        self.assertIsInstance(add, types.FunctionType)
+
         @timers.measure('mult')
         def multiply(a, b):
             time.sleep(0.02)
             return a * b
+
+        self.assertNotIsInstance(multiply, contextlib.AbstractContextManager)
+        self.assertIsInstance(multiply, types.FunctionType)
 
         self.assertEqual(add(21, 21), 42)
         self.assertEqual(add(-5, 5), 0)
@@ -61,6 +69,25 @@ class Tests(unittest.TestCase):
         self.assertNotIn('multiply', timers.summary)
         self.assertIn('mult', timers.summary)
         self.assertEqual(timers.summary['mult']['samples'], 2)
+
+    def test_context_or_decorator(self):
+        timers = TimingGroup('timings.context_or_decorator')
+
+        def sub(a, b):
+            time.sleep(0.001)
+            return a - b
+
+        context = timers.measure('sub')
+        self.assertIsInstance(context, contextlib.AbstractContextManager)
+        self.assertNotIsInstance(context, types.FunctionType)
+        decorated = timers.measure(sub)
+        self.assertNotIsInstance(decorated, contextlib.AbstractContextManager)
+        self.assertIsInstance(decorated, types.FunctionType)
+        self.assertEqual(decorated(10, 11), -1)
+        named_decorated = timers.measure(sub, 'sub')
+        self.assertNotIsInstance(named_decorated, contextlib.AbstractContextManager)
+        self.assertIsInstance(named_decorated, types.FunctionType)
+        self.assertEqual(named_decorated(100, 110), -10)
 
     def test_measure_many(self):
         timers = TimingGroup('timings.many')
