@@ -14,9 +14,11 @@ if __debug__:
     _LOG = logging.getLogger(__name__)
 
 
-def get_timing_group(name: str) -> TimingGroup:
-    """Work similarily logging.get_logger()."""
-    assert isinstance(name, str), type(name)
+def get_timing_group(*name_fragments: t.Sequence[str]) -> TimingGroup:
+    """Work similarily logging.getLogger()."""
+    assert name_fragments
+    assert all(isinstance(_, str) and _ for _ in name_fragments), name_fragments
+    name = '.'.join(name_fragments)
     if name in TimingCache.flat:
         return TimingCache.flat[name]
 

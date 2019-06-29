@@ -37,7 +37,7 @@ class Tests(unittest.TestCase):
 
         timers = get_timing_group('timings.getting_group')
         self.assertIs(timers, get_timing_group('timings.getting_group'))
-        # other_timers = get_timing_group('timings.getting_other_group')
+        self.assertIs(timers, get_timing_group('timings', 'getting_group'))
         with self.assertRaises(AssertionError):
             get_timing_group(32)
 

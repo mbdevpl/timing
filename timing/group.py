@@ -41,8 +41,7 @@ class TimingGroup(dict):
         if '.' in name:
             from .utils import get_timing_group
             prefix, _, suffix = name.rpartition('.')
-            group = get_timing_group('{}.{}'.format(self._name, prefix))
-            # import ipdb; ipdb.set_trace()
+            group = get_timing_group(self._name, prefix)
             return group.start(suffix)
 
         timing = Timing(name)
