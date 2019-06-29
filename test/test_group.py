@@ -1,17 +1,33 @@
 
+import logging
 import time
 import unittest
 
 from timing.group import TimingGroup
 
+_LOG = logging.getLogger(__name__)
+
 
 class Tests(unittest.TestCase):
 
-    @unittest.expectedFailure
-    def test_timing_group(self):
-        TimingGroup('timing.group.name')
-        # TimingCache.clear()
-        self.fail()
+    def test_basic(self):
+        timers = TimingGroup('timings.basic')
+        self.assertFalse(timers == 'timings.basic')
+        other_timers = TimingGroup('timings.basic')
+        self.assertEqual(timers, other_timers)
+        self.assertEqual(timers.name, 'timings.basic')
+        self.assertListEqual(timers.timings, [])
+        self.assertEqual(timers.summary, {})
+        timer = timers.start('timer')
+        time.sleep(0.01)
+        timer.stop()
+        timer = timers.start('sub.timer')
+        time.sleep(0.01)
+        timer.stop()
+        _LOG.info('%s', timers)
+        _LOG.info('%r', timers)
+        self.assertEqual(timers, timers)
+        self.assertNotEqual(timers, other_timers)
 
     def test_measure_context(self):
         timers = TimingGroup('timings.contexts')
@@ -44,3 +60,13 @@ class Tests(unittest.TestCase):
         self.assertNotIn('multiply', timers.summary)
         self.assertIn('mult', timers.summary)
         self.assertEqual(timers.summary['mult']['samples'], 2)
+
+    def test_measure_many(self):
+        timers = TimingGroup('timings.many')
+        for _ in timers.measure_many('by_samples', samples=10):
+            time.sleep(0.001)
+        for _ in timers.measure_many('by_threshold', threshold=0.01):
+            time.sleep(0.001)
+        for _ in timers.measure_many('by_both', samples=10, threshold=0.01):
+            time.sleep(0.001)
+        self.assertGreaterEqual(len(timers.timings), 12)
