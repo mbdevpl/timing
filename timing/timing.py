@@ -18,16 +18,10 @@ import typing as t
 
 import numpy as np
 
+from .config import TimingConfig
+
 if __debug__:
     _LOG = logging.getLogger(__name__)
-
-
-class TimingConfig:
-
-    """Global configuration of timing."""
-
-    enable_cache = True
-    overhead = 0.0
 
 
 class TimingCache:
