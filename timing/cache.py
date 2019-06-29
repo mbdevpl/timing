@@ -2,6 +2,9 @@
 import collections
 import typing as t
 
+from .timing import Timing
+from .group import TimingGroup
+
 
 class TimingCache:
 
@@ -70,7 +73,7 @@ class TimingCache:
         cls.chronological = []
 
     @classmethod
-    def query(cls, name: str) -> t.Union[dict, 'TimingGroup', 'Timing']:
+    def query(cls, name: str) -> t.Union[dict, TimingGroup, Timing]:
         assert isinstance(name, str), type(name)
         name_fragments = name.split('.')
         timing_cache = TimingCache.hierarchical

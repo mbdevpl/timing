@@ -49,7 +49,8 @@ def query_cache(name: str) -> t.Union[dict, TimingGroup, Timing]:
 def normalize_overhead(samples: int = 10000, threshold: float = 1.0):
     """Investigate overhead of starting and stopping the timer.
 
-    Do it so as to take the overhead into account when calculating actual execution times."""
+    Do it so as to take the overhead into account when calculating actual execution times.
+    """
     assert isinstance(samples, int)
     assert isinstance(threshold, float)
 

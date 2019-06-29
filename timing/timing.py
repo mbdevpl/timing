@@ -1,11 +1,3 @@
-"""Logging-like interface for timing the application.
-
-First version written on 7 September 2016.
-
-Copyright 2016, 2018  Mateusz Bysiek https://mbdevpl.github.io/
-"""
-
-# pylint: disable=too-few-public-methods
 
 import time
 import typing as t
@@ -27,33 +19,33 @@ class Timing:
         self._end = None  # type: float
         self._elapsed = None  # type: float
 
-    def _calculate_elapsed(self):
+    def _calculate_elapsed(self) -> None:
         assert isinstance(self._begin, float)
         assert isinstance(self._end, float)
 
         self._elapsed = self._end - self._begin
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def begin(self):
+    def begin(self) -> t.Optional[float]:
         return self._begin
 
     @property
-    def end(self):
+    def end(self) -> t.Optional[float]:
         return self._end
 
     @property
-    def elapsed(self):
+    def elapsed(self) -> t.Optional[float]:
         return self._elapsed
 
-    def start(self):
+    def start(self) -> None:
         """Start the timer."""
         self._begin = time.perf_counter()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the timer."""
         self._end = time.perf_counter()
         self._calculate_elapsed()

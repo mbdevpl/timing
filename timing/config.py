@@ -1,5 +1,5 @@
 
-class TimingConfig:
+class TimingConfig:  # pylint: disable=too-few-public-methods
 
     """Global configuration of timing."""
 
