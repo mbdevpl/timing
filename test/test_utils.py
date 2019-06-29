@@ -46,6 +46,7 @@ class Tests(unittest.TestCase):
             query_cache('timings.non_existing_group')
         timers = get_timing_group('timings.existing_group')
         self.assertIs(timers, query_cache('timings.existing_group'))
+        self.assertIs(timers, query_cache('timings', 'existing_group'))
 
     def test_overhead(self):
         self.assertTrue(TimingConfig.enable_cache)

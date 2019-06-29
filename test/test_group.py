@@ -81,3 +81,5 @@ class Tests(unittest.TestCase):
         self.assertIs(timers, timers.query_cache())
         self.assertIs(timers, root_timers.query_cache('subgroup'))
         self.assertIs(timers, query_cache('timings.root_group.subgroup'))
+        self.assertIs(timers, query_cache('timings.root_group', 'subgroup'))
+        self.assertIs(timers, query_cache('timings', 'root_group', 'subgroup'))

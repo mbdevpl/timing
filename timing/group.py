@@ -103,12 +103,12 @@ class TimingGroup(dict):
                 if threshold <= 0:
                     break
 
-    def query_cache(self, name: t.Optional[str] = None) -> t.Union[dict, 'TimingGroup', Timing]:
+    def query_cache(self, *name_fragments: t.Sequence[str]) -> t.Union[dict, 'TimingGroup', Timing]:
         """Query the cache within the scope of this timing group."""
         from .cache import TimingCache
-        if name is None:
+        if not name_fragments:
             return TimingCache.query(self._name)
-        return TimingCache.query('{}.{}'.format(self._name, name))
+        return TimingCache.query(self._name, *name_fragments)
 
     def summarize(self) -> None:
         """Calculate (or recalculate) various statistics from the raw data."""

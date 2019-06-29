@@ -1,3 +1,4 @@
+"""Utility and supporting functions for timing module."""
 
 import collections
 import logging
@@ -41,9 +42,9 @@ def get_timing_group(name: str) -> TimingGroup:
     return timing_group
 
 
-def query_cache(name: str) -> t.Union[dict, TimingGroup, Timing]:
+def query_cache(*name_fragments: t.Sequence[str]) -> t.Union[dict, TimingGroup, Timing]:
     """Request timing data from global cache."""
-    return TimingCache.query(name)
+    return TimingCache.query(*name_fragments)
 
 
 def normalize_overhead(samples: int = 10000, threshold: float = 1.0):

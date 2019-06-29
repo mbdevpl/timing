@@ -1,3 +1,4 @@
+"""Cache of timing results."""
 
 import collections
 import typing as t
@@ -73,9 +74,11 @@ class TimingCache:
         cls.chronological = []
 
     @classmethod
-    def query(cls, name: str) -> t.Union[dict, TimingGroup, Timing]:
-        assert isinstance(name, str), type(name)
-        name_fragments = name.split('.')
+    def query(cls, *name_fragments: t.Sequence[str]) -> t.Union[dict, TimingGroup, Timing]:
+        """Query the cache using one or more name fragments."""
+        assert name_fragments
+        assert all(isinstance(_, str) and _ for _ in name_fragments), name_fragments
+        name_fragments = '.'.join(name_fragments).split('.')
         timing_cache = TimingCache.hierarchical
         for _, name_fragment in enumerate(name_fragments):
             timing_cache = timing_cache[name_fragment]
