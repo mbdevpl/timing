@@ -96,6 +96,15 @@ class TimingCache:
         cls.flat = collections.OrderedDict()
         cls.chronological = []
 
+    @classmethod
+    def query(cls, name: str) -> t.Union[dict, 'TimingGroup', 'Timing']:
+        assert isinstance(name, str), type(name)
+        name_fragments = name.split('.')
+        timing_cache = TimingCache.hierarchical
+        for _, name_fragment in enumerate(name_fragments):
+            timing_cache = timing_cache[name_fragment]
+        return timing_cache['.']
+
 
 class Timing:
 
@@ -309,12 +318,7 @@ def get_timing_group(name: str) -> TimingGroup:
 
 def query_cache(name: str) -> t.Union[dict, TimingGroup, Timing]:
     """Request timing data from global cache."""
-    assert isinstance(name, str), type(name)
-    name_fragments = name.split('.')
-    timing_cache = TimingCache.hierarchical
-    for _, name_fragment in enumerate(name_fragments):
-        timing_cache = timing_cache[name_fragment]
-    return timing_cache['.']
+    return TimingCache.query(name)
 
 
 def normalize_overhead(samples: int = 10000, threshold: float = 1.0):
