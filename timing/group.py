@@ -23,15 +23,15 @@ class TimingGroup(dict):
         self._summary = None
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def timings(self):
+    def timings(self) -> t.List[Timing]:
         return [_ for _ in self._timings]
 
     @property
-    def summary(self):
+    def summary(self) -> dict:
         if self._summary is None:
             self.summarize()
         return self._summary
@@ -104,7 +104,7 @@ class TimingGroup(dict):
                     break
 
     def summarize(self) -> None:
-        """Calculate various statistics from the raw data."""
+        """Calculate (or recalculate) various statistics from the raw data."""
         self._summary = {}
         for name, timings in self.items():
             elapsed = [_.elapsed for _ in timings]
