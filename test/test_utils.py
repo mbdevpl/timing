@@ -26,6 +26,21 @@ def erratic_perf_counter():
 
 class Tests(unittest.TestCase):
 
+    def test_get_timing_group(self):
+        self.assertTrue(TimingConfig.enable_cache)
+        TimingConfig.enable_cache = False
+
+        timers = get_timing_group('timings.getting_group')
+        self.assertIsNot(timers, get_timing_group('timings.getting_group'))
+
+        TimingConfig.enable_cache = True
+
+        timers = get_timing_group('timings.getting_group')
+        self.assertIs(timers, get_timing_group('timings.getting_group'))
+        # other_timers = get_timing_group('timings.getting_other_group')
+        with self.assertRaises(AssertionError):
+            get_timing_group(32)
+
     def test_query_cache(self):
         with self.assertRaises(KeyError):
             query_cache('timings.non_existing_group')
@@ -64,9 +79,3 @@ class Tests(unittest.TestCase):
         self.assertTrue(not TimingCache.hierarchical, msg=TimingCache.hierarchical)
         self.assertTrue(not TimingCache.flat, msg=TimingCache.flat)
         self.assertTrue(not TimingCache.chronological, msg=TimingCache.chronological)
-
-    @unittest.expectedFailure
-    def test_get_timing_group(self):
-        get_timing_group('timing.group.name')
-        TimingCache.clear()
-        self.fail()
