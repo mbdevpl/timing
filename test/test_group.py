@@ -4,6 +4,7 @@ import time
 import unittest
 
 from timing.group import TimingGroup
+from timing.utils import get_timing_group, query_cache
 
 _LOG = logging.getLogger(__name__)
 
@@ -70,3 +71,13 @@ class Tests(unittest.TestCase):
         for _ in timers.measure_many('by_both', samples=10, threshold=0.01):
             time.sleep(0.001)
         self.assertGreaterEqual(len(timers.timings), 12)
+
+    def test_query_cache(self):
+        timers = get_timing_group('timings.root_group.subgroup')
+        with timers.measure('context1'):
+            time.sleep(0.01)
+
+        root_timers = get_timing_group('timings.root_group')
+        self.assertIs(timers, timers.query_cache())
+        self.assertIs(timers, root_timers.query_cache('subgroup'))
+        self.assertIs(timers, query_cache('timings.root_group.subgroup'))
