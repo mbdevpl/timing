@@ -91,7 +91,7 @@ class TimingCache:
     """Individual Timing objects in the order that they were started in."""
 
     @classmethod
-    def clear(cls):
+    def clear(cls) -> None:
         cls.hierarchical = collections.OrderedDict()
         cls.flat = collections.OrderedDict()
         cls.chronological = []
@@ -279,7 +279,7 @@ class TimingGroup(dict):
         return str(self)
 
 
-def get_timing_group(name: t.Optional[str]) -> TimingGroup:
+def get_timing_group(name: str) -> TimingGroup:
     """Work similarily logging.get_logger()."""
     assert isinstance(name, str), type(name)
     if name in TimingCache.flat:
