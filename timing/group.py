@@ -7,7 +7,7 @@ import typing as t
 import numpy as np
 
 from .config import TimingConfig
-from .timing import Timing, get_timing_group
+from .timing import Timing
 
 
 class TimingGroup(dict):
@@ -39,6 +39,7 @@ class TimingGroup(dict):
     def start(self, name: str) -> Timing:
         """Create a Timing belonging to this TimingGroup and start it."""
         if '.' in name:
+            from .utils import get_timing_group
             prefix, _, suffix = name.rpartition('.')
             group = get_timing_group('{}.{}'.format(self._name, prefix))
             # import ipdb; ipdb.set_trace()

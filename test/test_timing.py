@@ -10,9 +10,10 @@ import unittest.mock
 import numpy as np
 
 from timing.config import TimingConfig
-from timing.timing import Timing, get_timing_group, query_cache, normalize_overhead
+from timing.timing import Timing
 from timing.group import TimingGroup
 from timing.cache import TimingCache
+from timing.utils import get_timing_group, query_cache, normalize_overhead
 
 # logging.basicConfig(level=logging.DEBUG)
 
