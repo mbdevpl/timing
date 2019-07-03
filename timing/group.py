@@ -85,7 +85,7 @@ class TimingGroup(dict):
         return self._measure_decorator(function, name)
 
     @contextlib.contextmanager
-    def _measure_context(self, name: str):
+    def _measure_context(self, name: str) -> contextlib.ContextDecorator:
         timer = self.start(name)
         yield timer
         timer.stop()
@@ -101,7 +101,7 @@ class TimingGroup(dict):
         return function_wrapper
 
     def measure_many(self, name: str, samples: t.Optional[int] = None,
-                     threshold: t.Optional[float] = None):
+                     threshold: t.Optional[float] = None) -> t.Iterator[Timing]:
         """Use via 'for timer in measure_many('name'[, samples][, threshold])."""
         assert samples is not None or threshold is not None, (samples, threshold)
         assert samples is None or isinstance(samples, int) and samples > 0, samples

@@ -49,7 +49,7 @@ class Tests(unittest.TestCase):
             time.sleep(0.02)
             return a + b
 
-        self.assertNotIsInstance(add, contextlib.AbstractContextManager)
+        self.assertNotIsInstance(add, contextlib.ContextDecorator)
         self.assertIsInstance(add, types.FunctionType)
 
         @timers.measure('mult')
@@ -57,7 +57,7 @@ class Tests(unittest.TestCase):
             time.sleep(0.02)
             return a * b
 
-        self.assertNotIsInstance(multiply, contextlib.AbstractContextManager)
+        self.assertNotIsInstance(multiply, contextlib.ContextDecorator)
         self.assertIsInstance(multiply, types.FunctionType)
 
         self.assertEqual(add(21, 21), 42)
@@ -78,14 +78,14 @@ class Tests(unittest.TestCase):
             return a - b
 
         context = timers.measure('sub')
-        self.assertIsInstance(context, contextlib.AbstractContextManager)
+        self.assertIsInstance(context, contextlib.ContextDecorator)
         self.assertNotIsInstance(context, types.FunctionType)
         decorated = timers.measure(sub)
-        self.assertNotIsInstance(decorated, contextlib.AbstractContextManager)
+        self.assertNotIsInstance(decorated, contextlib.ContextDecorator)
         self.assertIsInstance(decorated, types.FunctionType)
         self.assertEqual(decorated(10, 11), -1)
         named_decorated = timers.measure(sub, 'sub')
-        self.assertNotIsInstance(named_decorated, contextlib.AbstractContextManager)
+        self.assertNotIsInstance(named_decorated, contextlib.ContextDecorator)
         self.assertIsInstance(named_decorated, types.FunctionType)
         self.assertEqual(named_decorated(100, 110), -10)
 
