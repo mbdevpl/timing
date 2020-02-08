@@ -1,9 +1,12 @@
 pipeline {
-  agent none
+  agent { label 'x86_64' }
+
+  options {
+    ansiColor('xterm')
+  }
 
   stages {
     stage('Test') {
-      agent { label 'x86_64' }
       steps {
         sh "python -m coverage run --branch --source . -m unittest -v"
         sh "python -m coverage xml"
