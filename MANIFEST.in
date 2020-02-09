@@ -1,6 +1,8 @@
 include setup_boilerplate.py
 include requirements.txt
-include test_requirements.txt
-include ci_requirements.txt
 include LICENSE
 include NOTICE
+include ./*/py.typed
+
+include test_requirements.txt
+recursive-include ./test __init__.py

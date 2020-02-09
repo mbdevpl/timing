@@ -3,32 +3,29 @@ addons:
   homebrew:
     packages:
       - pyenv
-matrix:
+jobs:
   include:
     - os: linux
-      dist: xenial
-      language: python
-      python: "3.5"
-    - os: linux
-      dist: xenial
       language: python
       python: "3.6"
     - os: linux
-      dist: xenial
       language: python
       python: "3.7"
+    - os: linux
+      language: python
+      python: "3.8"
     - os: osx
-      osx_image: xcode11
-      language: generic
-      env: TRAVIS_PYTHON_VERSION="3.5"
-    - os: osx
-      osx_image: xcode11
+      osx_image: xcode11.2
       language: generic
       env: TRAVIS_PYTHON_VERSION="3.6"
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode11.2
       language: generic
       env: TRAVIS_PYTHON_VERSION="3.7"
+    - os: osx
+      osx_image: xcode11.2
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.8"
 
 before_install:
   - .build/install_pyenv.sh
@@ -47,4 +44,3 @@ after_success:
 notifications:
   slack:
     secure: "AOQ2ZuvTXSB8vYjLbj+cwFs4gVFs9pEqoI0TyAlz1YW3uEOPuNzR8lSuCEN6gvcguWbWlVfZOsSDddnkAM9QkFzYMPA8cPQBEqYabRlCBDYqBOw7PNNqH8vGifJRxExLsDYHki6zHeT+n6enUM3YOdhh1z6NbkfFxGRW/mdG2Leg2Fjf5CngX/8Qwq2RwMyN/hP6RgflEdaxvRt3mRN0pXnQ/990lbWPTfHcs4WuCVSjGVULrMJHfmuhKLkV3CpbLNIEM2yXcvvMfcNRxjMEDXBD9uWU4lSXf57lqQj+w07QfYV6YQCtYCLlOiXS1OowR7KT2arR59AevSs3pzsFN8t0a99klouOdkZzWl82pA4mb8yLCUrEUsoeFnEGDxK7dUJaeY96HXMb/GCV34gInSsHQ8NylNQuUcagF81/BkuN3NASoqRhFNwiiwtd/9oO5e8REckSJCvjoeUN9sSeRnNx1hiqNVUpV6HQs27KFufJckFXTRGRicySoi8X9+A3jIP5wEtYy1N1MQQ65bsGIydh4G/E86GU5AvNuNSDOFaiGPRoGP0syAAtwGBWWKbfzO8dkcqmlwA63Ad20SWHjaZmCL5o7ixDwTJMGxIFLEr5hWDOgPAM17Qx78hIgv+McpUfOlnQtMBqrfK49GZya+G9kwqCA4s0/BIFdr3CFjg="
-  email: false

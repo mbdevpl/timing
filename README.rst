@@ -6,6 +6,8 @@
 timing
 ======
 
+Simplify logging of timings of selected parts of an application.
+
 .. image:: https://img.shields.io/pypi/v/timing.svg
     :target: https://pypi.org/project/timing
     :alt: package version from PyPI
@@ -21,8 +23,6 @@ timing
 .. image:: https://img.shields.io/github/license/mbdevpl/timing.svg
     :target: https://github.com/mbdevpl/timing/blob/master/NOTICE
     :alt: license
-
-Timing module was created to simplify logging of timings of selected parts of an application.
 
 .. contents::
     :backlinks: none
@@ -158,7 +158,7 @@ See these examples in action in `<examples.ipynb>`_ notebook.
 Requirements
 ============
 
-Python version 3.5 or later.
+Python version 3.6 or later.
 
 Python libraries as specified in `<requirements.txt>`_.
 
