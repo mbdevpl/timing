@@ -8,7 +8,6 @@ from .group import TimingGroup
 
 
 class TimingCache:
-
     """Global cache for timing results."""
 
     hierarchical = collections.OrderedDict()

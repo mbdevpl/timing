@@ -1,3 +1,4 @@
+"""Tests of utility functions."""
 
 import logging
 import os

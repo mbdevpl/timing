@@ -1,10 +1,10 @@
+"""Core module of the timing package."""
 
 import time
 import typing as t
 
 
 class Timing:
-
     """Timing of performance-critical parts of application.
 
     Uses time.perf_counter(): https://docs.python.org/3/library/time.html#time.perf_counter

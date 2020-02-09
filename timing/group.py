@@ -1,3 +1,4 @@
+"""Handling of group of timings."""
 
 import contextlib
 import datetime
@@ -11,7 +12,6 @@ from .timing import Timing
 
 
 class TimingGroup(dict):
-
     """Group of timings."""
 
     def __init__(self, name: str):
@@ -28,7 +28,7 @@ class TimingGroup(dict):
 
     @property
     def timings(self) -> t.List[Timing]:
-        return [_ for _ in self._timings]
+        return list(self._timings)
 
     @property
     def summary(self) -> dict:
@@ -102,7 +102,10 @@ class TimingGroup(dict):
 
     def measure_many(self, name: str, samples: t.Optional[int] = None,
                      threshold: t.Optional[float] = None) -> t.Iterator[Timing]:
-        """Use via 'for timer in measure_many('name'[, samples][, threshold])."""
+        """Iterate and time each iteration until some iterations or until some time passes.
+
+        Use via 'for timer in measure_many('name'[, samples][, threshold]).
+        """
         assert samples is not None or threshold is not None, (samples, threshold)
         assert samples is None or isinstance(samples, int) and samples > 0, samples
         assert threshold is None or threshold > 0, threshold

@@ -1,3 +1,4 @@
+"""Tests for the time measurement itself."""
 
 import logging
 import time

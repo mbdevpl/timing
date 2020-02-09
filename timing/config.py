@@ -1,6 +1,7 @@
+"""Configuration of the timings."""
+
 
 class TimingConfig:  # pylint: disable=too-few-public-methods
-
     """Global configuration of timing."""
 
     enable_cache = True

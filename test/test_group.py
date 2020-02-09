@@ -1,3 +1,4 @@
+"""Tests of handling of group of timings."""
 
 import contextlib
 import logging
@@ -45,17 +46,17 @@ class Tests(unittest.TestCase):
         timers = TimingGroup('timings.decorators')
 
         @timers.measure
-        def add(a, b):
+        def add(num1, num2):
             time.sleep(0.02)
-            return a + b
+            return num1 + num2
 
         self.assertNotIsInstance(add, contextlib.ContextDecorator)
         self.assertIsInstance(add, types.FunctionType)
 
         @timers.measure('mult')
-        def multiply(a, b):
+        def multiply(num1, num2):
             time.sleep(0.02)
-            return a * b
+            return num1 * num2
 
         self.assertNotIsInstance(multiply, contextlib.ContextDecorator)
         self.assertIsInstance(multiply, types.FunctionType)
@@ -73,9 +74,9 @@ class Tests(unittest.TestCase):
     def test_context_or_decorator(self):
         timers = TimingGroup('timings.context_or_decorator')
 
-        def sub(a, b):
+        def sub(num1, num2):
             time.sleep(0.001)
-            return a - b
+            return num1 - num2
 
         context = timers.measure('sub')
         self.assertIsInstance(context, contextlib.ContextDecorator)

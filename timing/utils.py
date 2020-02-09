@@ -22,11 +22,10 @@ def get_timing_group(*name_fragments: t.Sequence[str]) -> TimingGroup:
     if name in TimingCache.flat:
         return TimingCache.flat[name]
 
-    name_fragments = name.split('.')
-
     if TimingConfig.enable_cache:
         timing_cache = TimingCache.hierarchical
 
+        name_fragments = name.split('.')
         for i, name_fragment in enumerate(name_fragments):
             if name_fragment not in timing_cache:
                 for level in range(i, len(name_fragments)):
