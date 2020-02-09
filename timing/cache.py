@@ -1,6 +1,7 @@
 """Cache of timing results."""
 
 import collections
+import datetime
 import typing as t
 
 from .timing import Timing
@@ -10,7 +11,7 @@ from .group import TimingGroup
 class TimingCache:
     """Global cache for timing results."""
 
-    hierarchical = collections.OrderedDict()
+    hierarchical: t.Dict[str, dict] = collections.OrderedDict()
     """Hierarchy of TimingGroup objects strucutred in a tree that branches
     at '.' in the TimingGroup names.
 
@@ -43,7 +44,7 @@ class TimingCache:
         }
     """
 
-    flat = collections.OrderedDict()
+    flat: t.Dict[str, TimingGroup] = collections.OrderedDict()
     """Flattened view of the TimingGroup objects hierarchy.
 
     For example, having timing groups named after some example modules:
@@ -63,7 +64,7 @@ class TimingCache:
         }
     """
 
-    chronological = []
+    chronological: t.List[t.Tuple[datetime.datetime, Timing]] = []
     """Individual Timing objects in the order that they were started in."""
 
     @classmethod
@@ -73,12 +74,12 @@ class TimingCache:
         cls.chronological = []
 
     @classmethod
-    def query(cls, *name_fragments: t.Sequence[str]) -> t.Union[dict, TimingGroup, Timing]:
+    def query(cls, *name_fragments: str) -> t.Union[dict, TimingGroup, Timing]:
         """Query the cache using one or more name fragments."""
         assert name_fragments
         assert all(isinstance(_, str) and _ for _ in name_fragments), name_fragments
-        name_fragments = '.'.join(name_fragments).split('.')
+        normalized_name_fragments = '.'.join(name_fragments).split('.')
         timing_cache = TimingCache.hierarchical
-        for _, name_fragment in enumerate(name_fragments):
+        for _, name_fragment in enumerate(normalized_name_fragments):
             timing_cache = timing_cache[name_fragment]
         return timing_cache['.']

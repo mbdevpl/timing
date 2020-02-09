@@ -14,7 +14,7 @@ if __debug__:
     _LOG = logging.getLogger(__name__)
 
 
-def get_timing_group(*name_fragments: t.Sequence[str]) -> TimingGroup:
+def get_timing_group(*name_fragments: str) -> TimingGroup:
     """Work similarily logging.getLogger()."""
     assert name_fragments
     assert all(isinstance(_, str) and _ for _ in name_fragments), name_fragments
@@ -25,12 +25,12 @@ def get_timing_group(*name_fragments: t.Sequence[str]) -> TimingGroup:
     if TimingConfig.enable_cache:
         timing_cache = TimingCache.hierarchical
 
-        name_fragments = name.split('.')
-        for i, name_fragment in enumerate(name_fragments):
+        name_fragments_normalized = name.split('.')
+        for i, name_fragment in enumerate(name_fragments_normalized):
             if name_fragment not in timing_cache:
-                for level in range(i, len(name_fragments)):
-                    timing_cache[name_fragments[level]] = collections.OrderedDict()
-                    timing_cache = timing_cache[name_fragments[level]]
+                for level in range(i, len(name_fragments_normalized)):
+                    timing_cache[name_fragments_normalized[level]] = collections.OrderedDict()
+                    timing_cache = timing_cache[name_fragments_normalized[level]]
                 break
             timing_cache = timing_cache[name_fragment]
 
@@ -43,7 +43,7 @@ def get_timing_group(*name_fragments: t.Sequence[str]) -> TimingGroup:
     return timing_group
 
 
-def query_cache(*name_fragments: t.Sequence[str]) -> t.Union[dict, TimingGroup, Timing]:
+def query_cache(*name_fragments: str) -> t.Union[dict, TimingGroup, Timing]:
     """Request timing data from global cache."""
     return TimingCache.query(*name_fragments)
 
@@ -69,10 +69,10 @@ def normalize_overhead(samples: int = 10000, threshold: float = 1.0):
 
     TimingConfig.enable_cache = cache_status
 
-    mean = statistics.mean(overheads)
-    median = statistics.median(overheads)
-    stdev = statistics.pstdev(overheads, mean)
-    variance = statistics.pvariance(overheads, mean)
+    mean: float = statistics.mean(overheads)  # type: ignore
+    median: float = statistics.median(overheads)  # type: ignore
+    stdev: float = statistics.pstdev(overheads, mean)  # type: ignore
+    variance: float = statistics.pvariance(overheads, mean)  # type: ignore
 
     TimingConfig.overhead = median
 

@@ -15,10 +15,10 @@ class Timing:
         assert name
 
         # self._group = None  # type: t.Optional[TimingGroup]
-        self._name = name  # type: str
-        self._begin = None  # type: float
-        self._end = None  # type: float
-        self._elapsed = None  # type: float
+        self._name: str = name
+        self._begin: t.Optional[float] = None
+        self._end: t.Optional[float] = None
+        self._elapsed: t.Optional[float] = None
 
     def _calculate_elapsed(self) -> None:
         assert isinstance(self._begin, float)

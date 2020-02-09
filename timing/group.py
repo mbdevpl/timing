@@ -1,5 +1,6 @@
 """Handling of group of timings."""
 
+import collections.abc
 import contextlib
 import datetime
 import types
@@ -18,9 +19,9 @@ class TimingGroup(dict):
         super().__init__()
         assert isinstance(name, str)
 
-        self._name = name  # type: str
-        self._timings = []  # type: t.List[Timing]
-        self._summary = None
+        self._name: str = name
+        self._timings: t.List[Timing] = []
+        self._summary: t.Optional[t.Dict[str, t.Any]] = None
 
     @property
     def name(self) -> str:
@@ -31,9 +32,10 @@ class TimingGroup(dict):
         return list(self._timings)
 
     @property
-    def summary(self) -> dict:
+    def summary(self) -> t.Dict[str, t.Any]:
         if self._summary is None:
             self.summarize()
+        assert self._summary is not None
         return self._summary
 
     def start(self, name: str) -> Timing:
@@ -80,18 +82,20 @@ class TimingGroup(dict):
         if function is None:
             # in practice this path is also taken when @measure(name) is used,
             # but since contextlib uses ContextDecorator, it works
+            assert name is not None
             return self._measure_context(name)
         assert isinstance(function, types.FunctionType)
         return self._measure_decorator(function, name)
 
     @contextlib.contextmanager
-    def _measure_context(self, name: str) -> contextlib.ContextDecorator:
+    def _measure_context(self, name: str) -> t.Generator:
+        """Return contextlib.ContextDecorator that can be used as decorator or context."""
         timer = self.start(name)
         yield timer
         timer.stop()
 
     def _measure_decorator(self, function: types.FunctionType,
-                           name: t.Optional[str] = None) -> types.FunctionType:
+                           name: t.Optional[str] = None) -> collections.abc.Callable:
         if name is None:
             name = function.__name__
 
@@ -118,11 +122,12 @@ class TimingGroup(dict):
                 if samples == 0:
                     break
             if threshold is not None:
+                assert timer.elapsed is not None
                 threshold -= timer.elapsed
                 if threshold <= 0:
                     break
 
-    def query_cache(self, *name_fragments: t.Sequence[str]) -> t.Union[dict, 'TimingGroup', Timing]:
+    def query_cache(self, *name_fragments: str) -> t.Union[dict, 'TimingGroup', Timing]:
         """Query the cache within the scope of this timing group."""
         from .cache import TimingCache
         if not name_fragments:
