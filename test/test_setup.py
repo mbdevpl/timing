@@ -113,7 +113,7 @@ LINK_EXAMPLES = [
     (None, 'setup.py', True), ('this file', 'setup.py', True), (None, 'test/test_setup.py', True),
     (None, 'test/test_setup.py#L98', True), ('line 5 of this file', 'setup.py#L5', True),
     (None, 'http://site.com', False), (None, '../something/else', False), (None, 'no.thing', False),
-    (None, '/my/abs/path', False)]
+    (None, '/my/abs/path', False), ('test dir', 'test', True)]
 
 
 def get_package_folder_name():
