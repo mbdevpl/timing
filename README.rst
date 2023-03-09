@@ -12,10 +12,6 @@ Simplify logging of timings of selected parts of an application.
     :target: https://pypi.org/project/timing
     :alt: package version from PyPI
 
-.. image:: https://travis-ci.com/mbdevpl/timing.svg?branch=master
-    :target: https://travis-ci.com/mbdevpl/timing
-    :alt: build status from Travis CI
-
 .. image:: https://codecov.io/gh/mbdevpl/timing/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/mbdevpl/timing
     :alt: test coverage from Codecov
@@ -158,7 +154,7 @@ See these examples in action in `<examples.ipynb>`_ notebook.
 Requirements
 ============
 
-Python version 3.6 or later.
+Python version 3.11 or later.
 
 Python libraries as specified in `<requirements.txt>`_.
 
