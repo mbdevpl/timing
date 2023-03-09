@@ -1,2 +1,2 @@
-numpy >= 1.18
-version-query >= 1.1, == 1.*
+numpy ~= 1.24
+version-query ~= 1.2
