@@ -15,7 +15,7 @@ if __debug__:
 
 
 def get_timing_group(*name_fragments: str) -> TimingGroup:
-    """Work similarily logging.getLogger()."""
+    """Work similarly to logging.getLogger()."""
     assert name_fragments
     assert all(isinstance(_, str) and _ for _ in name_fragments), name_fragments
     name = '.'.join(name_fragments)

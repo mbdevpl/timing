@@ -13,7 +13,7 @@ import types
 import typing as t
 import unittest
 
-__version__ = '2023.02.28'
+__version__ = '2023.03.09'
 
 _LOG = logging.getLogger(__name__)
 
@@ -309,7 +309,7 @@ class PackageTests(unittest.TestCase):
 
 @unittest.skipUnless(os.environ.get('TEST_PACKAGING') or os.environ.get('CI'),
                      'skipping packaging tests for actual package')
-class IntergrationTests(unittest.TestCase):
+class IntegrationTests(unittest.TestCase):
     """Test if the boilerplate can actually create a valid package."""
 
     pkg_name = get_package_folder_name()

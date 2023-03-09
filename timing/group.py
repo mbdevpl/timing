@@ -60,7 +60,8 @@ class TimingGroup(dict):
         timing.start()
         return timing
 
-    def measure(self, function: t.Optional[types.FunctionType] = None, name: str = None):
+    def measure(
+            self, function: t.Optional[types.FunctionType] = None, name: t.Optional[str] = None):
         """Use this method as a context manager or decorator.
 
         As context manager:
@@ -158,7 +159,7 @@ class TimingGroup(dict):
 
     def __str__(self):
         args = [self._name] + self._timings
-        return '{}({})'.format(type(self).__name__, ', '.join([str(_) for _ in args]))
+        return f'{type(self).__name__}({", ".join([str(_) for _ in args])})'
 
     def __repr__(self):
         return str(self)

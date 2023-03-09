@@ -12,7 +12,7 @@ class TimingCache:
     """Global cache for timing results."""
 
     hierarchical: t.Dict[str, dict] = collections.OrderedDict()
-    """Hierarchy of TimingGroup objects strucutred in a tree that branches
+    """Hierarchy of TimingGroup objects structured in a tree that branches
     at '.' in the TimingGroup names.
 
     For example, having timing groups named after some example modules:

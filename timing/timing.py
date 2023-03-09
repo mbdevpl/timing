@@ -59,7 +59,7 @@ class Timing:
 
     def __str__(self):
         args = [self._name, self._begin, self._end, self._elapsed]
-        return '{}({})'.format(type(self).__name__, ', '.join([str(_) for _ in args]))
+        return f'{type(self).__name__}({", ".join([str(_) for _ in args])})'
 
     def __repr__(self):
         return str(self)
