@@ -24,6 +24,7 @@ jobs:
           architecture: x64
       - run: pip install -r requirements_ci.txt
       - run: python -m coverage run --branch --source . -m unittest -v
+      - run: python -O -m coverage run --append --branch --source . -m unittest -v test.test_utils
       - run: python -m coverage report --show-missing
       - run: codecov
   publish:

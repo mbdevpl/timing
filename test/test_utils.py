@@ -25,6 +25,7 @@ def erratic_perf_counter():
 
 class Tests(unittest.TestCase):
 
+    @unittest.skipIf(not __debug__, reason='skipping test which would fail for optimised run')
     def test_get_timing_group(self):
         self.assertTrue(TimingConfig.enable_cache)
         TimingConfig.enable_cache = False
@@ -47,6 +48,7 @@ class Tests(unittest.TestCase):
         self.assertIs(timers, query_cache('timings.existing_group'))
         self.assertIs(timers, query_cache('timings', 'existing_group'))
 
+    @unittest.skipIf(not __debug__, reason='skipping test which would fail for optimised run')
     def test_overhead(self):
         self.assertTrue(TimingConfig.enable_cache)
         TimingCache.clear()
