@@ -45,7 +45,7 @@ This follows the conventions of :python:`logging` module.
     _LOG = logging.getLogger(__name__)
 
 Any name can be used instead of :python:`__name__`.
-However, if a names of format :python:`module.sub.subsub` are used, this will create a timing
+However, if names of format :python:`module.sub.sub_sub` are used, this will create a timing
 hierarchy where each timing data is stored in its proper location and can be queried easier.
 
 The resulting :python:`_TIME` object is used to create individual timers,
