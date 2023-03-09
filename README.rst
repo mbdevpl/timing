@@ -12,12 +12,20 @@ Simplify logging of timings of selected parts of an application.
     :target: https://pypi.org/project/timing
     :alt: package version from PyPI
 
-.. image:: https://codecov.io/gh/mbdevpl/timing/branch/master/graph/badge.svg
+.. image:: https://github.com/mbdevpl/timing/actions/workflows/python.yml/badge.svg?branch=main
+    :target: https://github.com/mbdevpl/timing/actions
+    :alt: build status from GitHub
+
+.. image:: https://codecov.io/gh/mbdevpl/timing/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/mbdevpl/timing
     :alt: test coverage from Codecov
 
+.. image:: https://api.codacy.com/project/badge/Grade/5dba9ea9f47e4e86aeed6eddfce42640
+    :target: https://app.codacy.com/gh/mbdevpl/timing
+    :alt: grade from Codacy
+
 .. image:: https://img.shields.io/github/license/mbdevpl/timing.svg
-    :target: https://github.com/mbdevpl/timing/blob/master/NOTICE
+    :target: NOTICE
     :alt: license
 
 .. contents::
