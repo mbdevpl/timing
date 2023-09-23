@@ -33,6 +33,10 @@ class TimingGroup(dict):
 
     @property
     def summary(self) -> t.Dict[str, t.Any]:
+        """Return a collection of statistics for the timings in this group.
+
+        Calculate statistics if not already calculated, and use cached values otherwise.
+        """
         if self._summary is None:
             self.summarize()
         assert self._summary is not None
@@ -41,14 +45,14 @@ class TimingGroup(dict):
     def start(self, name: str) -> Timing:
         """Create a Timing belonging to this TimingGroup and start it."""
         if '.' in name:
-            from .utils import get_timing_group
+            from .utils import get_timing_group  # pylint: disable=import-outside-toplevel
             prefix, _, suffix = name.rpartition('.')
             group = get_timing_group(self._name, prefix)
             return group.start(suffix)
 
         timing = Timing(name)
         if TimingConfig.enable_cache:
-            from .cache import TimingCache
+            from .cache import TimingCache  # pylint: disable=import-outside-toplevel
             self._timings.append(timing)
             if self._name in TimingCache.flat and TimingCache.flat[self._name] is self:
                 cache_entry = (datetime.datetime.now(), timing)
@@ -130,7 +134,7 @@ class TimingGroup(dict):
 
     def query_cache(self, *name_fragments: str) -> t.Union[dict, 'TimingGroup', Timing]:
         """Query the cache within the scope of this timing group."""
-        from .cache import TimingCache
+        from .cache import TimingCache  # pylint: disable=import-outside-toplevel
         if not name_fragments:
             return TimingCache.query(self._name)
         return TimingCache.query(self._name, *name_fragments)
