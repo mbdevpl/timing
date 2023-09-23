@@ -168,4 +168,4 @@ Python libraries as specified in `<requirements.txt>`_.
 
 Building and running tests additionally requires packages listed in `<test_requirements.txt>`_.
 
-Tested on Linux and OS X.
+Tested on Linux, macOS and Windows.

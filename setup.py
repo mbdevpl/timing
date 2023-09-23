@@ -1,9 +1,9 @@
 """Setup script for timing package."""
 
-import setup_boilerplate
+import boilerplates.setup
 
 
-class Package(setup_boilerplate.Package):
+class Package(boilerplates.setup.Package):
     """Package metadata."""
 
     name = 'timing'
@@ -16,7 +16,7 @@ class Package(setup_boilerplate.Package):
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
-        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: MacOS',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3.11',
