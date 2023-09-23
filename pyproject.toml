@@ -1,2 +1,4 @@
 [build-system]
-requires=['docutils', 'setuptools', 'version-query', 'wheel']
+requires = [
+    'boilerplates[setup] ~= 1.0'
+]
