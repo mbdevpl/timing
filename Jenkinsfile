@@ -46,6 +46,7 @@ pipeline {
         sh '''#!/usr/bin/env bash
           set -Eeuxo pipefail
           python3 -m coverage run --branch --source . -m unittest -v
+          python3 -O -m coverage run --append --branch --source . -m unittest -v test.test_utils
         '''
       }
     }
