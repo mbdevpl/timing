@@ -46,6 +46,13 @@ class Tests(unittest.TestCase):
         self.assertIsInstance(timer.elapsed, float)
         self.assertGreater(timer.elapsed, 0)
 
+    def test_stop_not_running(self):
+        timer = Timing('timing')
+        with self.assertRaises(AssertionError):
+            timer.stop()
+        with self.assertRaises(AssertionError):
+            _LOG.debug('%f', timer.end)
+
     def test_compare(self):
         timer = Timing('timing')
         other_timer = Timing('timing')
@@ -67,3 +74,8 @@ class Tests(unittest.TestCase):
         self.assertNotEqual(timer, other_timer)
         other_timer = copy.deepcopy(timer)
         self.assertEqual(timer, other_timer)
+
+    def test_output(self):
+        timer = Timing('my_timing')
+        self.assertIn('my_timing', str(timer))
+        self.assertIn('my_timing', repr(timer))
