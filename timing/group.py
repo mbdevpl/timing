@@ -1,8 +1,8 @@
 """Handling of group of timings."""
 
-import collections.abc
 import contextlib
 import datetime
+import functools
 import types
 import typing as t
 
@@ -98,19 +98,20 @@ class TimingGroup(dict):
         return self._measure_decorator(function, name)
 
     @contextlib.contextmanager
-    def _measure_context(self, name: str) -> t.Generator:
-        """Return contextlib.ContextDecorator that can be used as decorator or context."""
+    def _measure_context(self, name: str) -> t.Generator[Timing, None, None]:
+        """Return the just-started timer as context variable."""
         timer = self.start(name)
         yield timer
         timer.stop()
 
-    def _measure_decorator(self, function: types.FunctionType,
-                           name: t.Optional[str] = None) -> collections.abc.Callable:
+    def _measure_decorator(self, function: types.FunctionType, name: str | None = None):
+        """Return the original function wrapped in a timing context."""
         if name is None:
             name = function.__name__
 
+        @functools.wraps(function)
         def function_wrapper(*args, **kwargs):
-            with self.measure(name):
+            with self._measure_context(name):
                 return function(*args, **kwargs)
         return function_wrapper
 
