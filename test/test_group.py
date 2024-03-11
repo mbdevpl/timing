@@ -71,6 +71,17 @@ class Tests(unittest.TestCase):
         self.assertIn('mult', timers.summary)
         self.assertEqual(timers.summary['mult']['samples'], 2)
 
+    def test_measure_decorator_name_only(self):
+        timers = TimingGroup('timings.decorators')
+
+        @timers.measure(name='mult')
+        def multiply(num1, num2):
+            time.sleep(0.02)
+            return num1 * num2
+
+        self.assertEqual(multiply(21, 2), 42)
+        _LOG.info('%s', timers)
+
     def test_context_or_decorator(self):
         timers = TimingGroup('timings.context_or_decorator')
 

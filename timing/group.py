@@ -64,8 +64,7 @@ class TimingGroup(dict):
         timing.start()
         return timing
 
-    def measure(
-            self, function: t.Optional[types.FunctionType] = None, name: t.Optional[str] = None):
+    def measure(self, function_or_name: t.Callable | str | None = None, name: str | None = None):
         """Use this method as a context manager or decorator.
 
         As context manager:
@@ -81,9 +80,15 @@ class TimingGroup(dict):
         @measure(name)
         def ...
         """
-        assert function is not None or name is not None
-        if name is None and function is not None and isinstance(function, str):
-            function, name = None, function
+        if function_or_name is not None:
+            if isinstance(function_or_name, str):
+                assert name is None, 'name given in the first argument, 2nd argument must be None'
+                function, name = None, function_or_name
+            else:
+                function = function_or_name
+        else:
+            assert name is not None, 'at least one argument to measure() is required'
+            function = None
         if function is None:
             # in practice this path is also taken when @measure(name) is used,
             # but since contextlib uses ContextDecorator, it works
